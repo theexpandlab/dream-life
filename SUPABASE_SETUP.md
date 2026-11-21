@@ -1,43 +1,26 @@
-# Connect accounts and saving (Supabase)
+# Accounts and saving (Supabase)
 
-About 10 minutes. You only do this once.
+## How it's set up
+- Supabase was created through **Vercel > dream-life-app > Storage** (Free plan, $0/month). Vercel holds the keys; nothing secret is in GitHub.
+- On every web deploy, `app/scripts/migrate.mjs` applies any new files in `supabase/migrations/` (once each, in order). To change the database, add a new numbered file such as `0002_add_reminders.sql` and push.
+- The web build maps Vercel's `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` to the `EXPO_PUBLIC_` names the app reads (see `app/vercel.json`).
 
-## 1. Create the project
-1. Go to https://supabase.com and sign in (GitHub login is easiest).
-2. New project. Name: `dream-life`. Pick a strong database password and save it in your password manager. Region: East US (closest to Austin).
-3. Wait about 2 minutes for it to finish setting up.
+## Open the Supabase dashboard
+Vercel > dream-life-app > Storage > your Supabase database > **Open in Supabase**.
 
-## 2. Create the tables
-1. In the left sidebar: **SQL Editor**, then **New query**.
-2. Open `supabase/migrations/0001_init.sql` from this repo, copy all of it, paste it in, click **Run**.
-3. You should see "Success. No rows returned."
-
-This creates every table (profiles, daily check-ins, monthly scores, weekly resets, goals, wins, highlights, the dump, dream boards) and locks each one so people can only ever see their own data.
-
-## 3. Auth settings
+## Recommended settings (in the Supabase dashboard)
 **Authentication > Sign In / Providers > Email**
-- Keep **Email** on.
-- **Confirm email**: turn it **off** while you test with friends (people get straight in). Turn it back **on** before the public launch.
-- Minimum password length: 8.
+- **Confirm email**: off while friends test (they get straight in). Turn it back on before the public launch.
 
 **Authentication > URL Configuration**
-- Site URL: `https://dream-life-prototype.vercel.app` for now (the password reset link opens here). Change it when the app has its real web address.
+- Site URL: `https://dream-life-app-two.vercel.app` (where confirmation and password reset links land).
 
-## 4. Give the app its keys
-1. **Project Settings > API**. Copy the **Project URL** and the **anon public** key.
-2. In the `app/` folder, copy `.env.example` to `.env` and paste them in:
-   ```
-   EXPO_PUBLIC_SUPABASE_URL=https://xxxx.supabase.co
-   EXPO_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-   ```
-3. Restart `npx expo start`.
+## Running the app on your computer with the real database
+1. Supabase dashboard > Project Settings > API: copy the Project URL and the anon public key.
+2. In `app/`, copy `.env.example` to `.env` and paste them in.
+3. `npx expo start`.
 
-The anon key is designed to live inside the app. It can only do what the row level security rules allow. Never put the **service_role** key in the app.
+The anon key is designed to live inside the app; it can only do what the row level security rules allow. Never put the service role or secret key in the app.
 
-`.env` is git-ignored, so the keys never land in GitHub. For cloud builds later (EAS), the same two values go into Expo's environment variables.
-
-## 5. Check it works
-1. Open the app, take the tour, create an account.
-2. Today tab: tap a few areas, **Save today**.
-3. In Supabase: **Table Editor > days**. Your row is there.
-4. Log out, log back in. Your check-in is still selected.
+## Phone builds
+Add the same two values as GitHub repository secrets `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` (see `GET_THE_APP.md`).

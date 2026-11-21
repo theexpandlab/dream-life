@@ -3,14 +3,13 @@
 ## Today: web link
 https://dream-life-app-two.vercel.app
 
-Open it on your phone, log in to Vercel when asked (testers can't get in until it's made public), then Share > Add to Home Screen. Accounts and saving work once Supabase is connected (step 1 below).
+Open it on your phone, log in to Vercel when asked (testers can't get in until it's made public), then Share > Add to Home Screen. Accounts and saving are live.
 
-## Step 1: Supabase (accounts and saving), 10 minutes
-Follow `SUPABASE_SETUP.md`. Then add the two keys in two places:
-- **GitHub**: repo Settings > Secrets and variables > Actions > New repository secret
-  - `EXPO_PUBLIC_SUPABASE_URL`
-  - `EXPO_PUBLIC_SUPABASE_ANON_KEY`
-- **Vercel**: dream-life-app project > Settings > Environment Variables, same two names. Then Redeploy.
+## Step 1: Supabase (accounts and saving): done
+Connected through Vercel, tables and privacy rules created. See `SUPABASE_SETUP.md`.
+For phone builds, also add the two keys to GitHub (repo Settings > Secrets and variables > Actions):
+- `EXPO_PUBLIC_SUPABASE_URL`
+- `EXPO_PUBLIC_SUPABASE_ANON_KEY`
 
 ## Step 2: Expo account (free), 5 minutes
 1. Sign up at https://expo.dev
