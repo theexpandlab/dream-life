@@ -1,0 +1,54 @@
+name: Build app
+
+# Run from GitHub: Actions > Build app > Run workflow.
+# Needs these repository secrets (Settings > Secrets and variables > Actions):
+#   EXPO_TOKEN                 from expo.dev > Account settings > Access tokens
+#   EXPO_PUBLIC_SUPABASE_URL   from Supabase > Project Settings > API
+#   EXPO_PUBLIC_SUPABASE_ANON_KEY
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        description: Which phone
+        type: choice
+        options: [android, ios, all]
+        default: android
+      profile:
+        description: "preview = install link for testers, production = for the stores"
+        type: choice
+        options: [preview, production]
+        default: preview
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    environment: ${{ inputs.profile == 'production' && 'production' || 'staging' }}
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - run: npm ci
+      - name: Add Supabase keys to the build
+        env:
+          URL: ${{ secrets.EXPO_PUBLIC_SUPABASE_URL }}
+          KEY: ${{ secrets.EXPO_PUBLIC_SUPABASE_ANON_KEY }}
+        run: |
+          jq --arg url "$URL" --arg key "$KEY" \
+            '.build.base.env.EXPO_PUBLIC_SUPABASE_URL = $url | .build.base.env.EXPO_PUBLIC_SUPABASE_ANON_KEY = $key' \
+            eas.json > eas.tmp && mv eas.tmp eas.json
+      - name: Link the Expo project (first run creates it)
+        run: eas init --non-interactive --force
+      - name: Build
+        run: eas build --platform ${{ inputs.platform }} --profile ${{ inputs.profile }} --non-interactive --no-wait
+      - name: Where to find it
+        run: echo "Build started. Open expo.dev > your account > dream-life > Builds for the install link (about 15 minutes)."
