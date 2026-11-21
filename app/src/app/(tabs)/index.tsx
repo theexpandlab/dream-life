@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ComingSoon } from '@/components/ComingSoon';
 import { Screen } from '@/components/Screen';
 import { SectionHeader } from '@/components/SectionHeader';
 import { Card, Eyebrow, Segments, Ticker, Tile } from '@/components/ui';
+import { useOnboarding } from '@/lib/onboarding';
 import { colors, fonts, space } from '@/theme/tokens';
 
 const SECTIONS = [
@@ -24,10 +25,12 @@ export default function Home() {
 
 /** Sample numbers until Supabase is wired up. */
 function Overview() {
+  const { profile, restart } = useOnboarding();
+  const name = profile.name.trim();
   return (
     <>
       <SectionHeader
-        eyebrow={'01 / Overview'}
+        eyebrow={name ? `Hi, ${name} \u2726` : '01 / Overview'}
         before="your life, at a "
         highlight="glance"
         after="."
@@ -45,6 +48,9 @@ function Overview() {
         </Card>
       </View>
       <ComingSoon items={['Wheel of life chart', 'Life score trend line', 'Area that needs love']} />
+      <Pressable accessibilityRole="button" onPress={restart} style={styles.tour}>
+        <Text style={styles.tourTxt}>Take the tour again {'\u2192'}</Text>
+      </Pressable>
     </>
   );
 }
@@ -67,5 +73,7 @@ function Goals() {
 const styles = StyleSheet.create({
   pad: { paddingHorizontal: space.md, gap: space.md },
   row: { flexDirection: 'row', flexWrap: 'wrap', gap: space.md },
+  tour: { alignSelf: 'center', minHeight: 44, justifyContent: 'center', paddingHorizontal: space.md },
+  tourTxt: { fontFamily: fonts.mono, fontSize: 12, letterSpacing: 1.2, textTransform: 'uppercase', color: colors.ink, textDecorationLine: 'underline' },
   heroText: { fontFamily: fonts.serif, fontSize: 36, color: colors.paper, marginTop: space.xs },
 });

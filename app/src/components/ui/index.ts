@@ -1,3 +1,4 @@
+export { BreathingCircle } from './BreathingCircle';
 export { Card } from './Card';
 export { Chip } from './Chip';
 export { Eyebrow } from './Eyebrow';
