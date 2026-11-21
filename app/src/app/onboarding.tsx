@@ -46,7 +46,7 @@ export default function Onboarding() {
   const done = () => {
     celebrate();
     finish();
-    router.replace('/');
+    router.replace('/sign-up');
   };
 
   const canNext = !step.gated || ready;

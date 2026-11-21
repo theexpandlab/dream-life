@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useEffect, useRef, useState } from 'react';
 import { Animated, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
@@ -31,6 +32,9 @@ export function Welcome() {
         <Ticker />
       </View>
       <Sub>This quick tour takes about a minute. You'll try each part as we go.</Sub>
+      <Pressable accessibilityRole="link" onPress={() => router.replace('/sign-in')} style={s.loginLink}>
+        <Text style={s.mono}>Already have an account? <Text style={{ textDecorationLine: 'underline' }}>Log in</Text></Text>
+      </Pressable>
     </View>
   );
 }
@@ -339,6 +343,7 @@ export function Remind({ profile, update }: StepProps) {
 
 const s = StyleSheet.create({
   center: { flex: 1, justifyContent: 'center', gap: space.lg },
+  loginLink: { minHeight: 44, justifyContent: 'center' },
   bleed: { marginHorizontal: -space.md },
   gap: { gap: space.md },
   gapSm: { gap: space.sm },

@@ -12,10 +12,12 @@ export type Profile = {
   firstWin: string;
   horizon: 'y1' | 'y3' | 'y5';
   reminder: Reminder;
+  /** True once these answers have been copied to the account. */
+  synced: boolean;
 };
 
 const KEY = 'dreamlife.onboarding.v1';
-const EMPTY: Profile = { done: false, name: '', focusAreas: [], firstWin: '', horizon: 'y1', reminder: 'morning' };
+const EMPTY: Profile = { done: false, name: '', focusAreas: [], firstWin: '', horizon: 'y1', reminder: 'morning', synced: false };
 
 type Ctx = {
   loaded: boolean;
@@ -23,6 +25,8 @@ type Ctx = {
   update: (patch: Partial<Profile>) => void;
   finish: () => void;
   restart: () => void;
+  /** Forget this device's answers on log out, so the next person starts clean. */
+  clear: () => void;
 };
 
 const OnboardingContext = createContext<Ctx | null>(null);
@@ -54,8 +58,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       loaded,
       profile,
       update: (patch) => save({ ...profile, ...patch }),
-      finish: () => save({ ...profile, done: true }),
+      finish: () => save({ ...profile, done: true, synced: false }),
       restart: () => save({ ...profile, done: false }),
+      clear: () => save({ ...EMPTY, done: true, synced: true }),
     }),
     [loaded, profile, save],
   );

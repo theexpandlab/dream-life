@@ -5,6 +5,7 @@ import { ComingSoon } from '@/components/ComingSoon';
 import { Screen } from '@/components/Screen';
 import { SectionHeader } from '@/components/SectionHeader';
 import { Card, Eyebrow, Segments, Ticker, Tile } from '@/components/ui';
+import { useAuth } from '@/lib/auth';
 import { useOnboarding } from '@/lib/onboarding';
 import { colors, fonts, space } from '@/theme/tokens';
 
@@ -25,7 +26,8 @@ export default function Home() {
 
 /** Sample numbers until Supabase is wired up. */
 function Overview() {
-  const { profile, restart } = useOnboarding();
+  const { profile, restart, clear } = useOnboarding();
+  const { signOut } = useAuth();
   const name = profile.name.trim();
   return (
     <>
@@ -50,6 +52,16 @@ function Overview() {
       <ComingSoon items={['Wheel of life chart', 'Life score trend line', 'Area that needs love']} />
       <Pressable accessibilityRole="button" onPress={restart} style={styles.tour}>
         <Text style={styles.tourTxt}>Take the tour again {'\u2192'}</Text>
+      </Pressable>
+      <Pressable
+        accessibilityRole="button"
+        onPress={async () => {
+          await signOut();
+          clear();
+        }}
+        style={styles.tour}
+      >
+        <Text style={styles.tourTxt}>Log out</Text>
       </Pressable>
     </>
   );

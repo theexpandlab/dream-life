@@ -11,7 +11,7 @@ import { colors, space } from '@/theme/tokens';
  * Wins (Win board, Highlights, The dump), Dream (Dream you).
  */
 const TABS = [
-  { name: 'index', href: '/', label: 'Home' },
+  { name: 'home', href: '/home', label: 'Home' },
   { name: 'today', href: '/today', label: 'Today' },
   { name: 'reflect', href: '/reflect', label: 'Reflect' },
   { name: 'wins', href: '/wins', label: 'Wins' },
