@@ -1,6 +1,8 @@
 import type { Session } from '@supabase/supabase-js';
 import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
+import { Platform } from 'react-native';
+
 import { isSupabaseConfigured, supabase } from '@/lib/supabase';
 
 type Result = { error?: string; needsConfirmation?: boolean };
@@ -30,6 +32,9 @@ function friendly(message: string): string {
   return message;
 }
 
+/** On web, email links come back to this same site (must be listed in Supabase > Authentication > URL Configuration). */
+const webOrigin = () => (Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.origin : undefined);
+
 const NOT_READY = 'Accounts are not connected yet. Add the Supabase keys (see SUPABASE_SETUP.md).';
 
 export function AuthProvider({ children }: { children: ReactNode }) {
@@ -55,7 +60,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         const { data, error } = await supabase.auth.signUp({
           email: email.trim(),
           password,
-          options: { data: { name: name.trim() } },
+          options: { data: { name: name.trim() }, emailRedirectTo: webOrigin() },
         });
         if (error) return { error: friendly(error.message) };
         // With "Confirm email" switched on in Supabase there is no session until they tap the link.
@@ -68,7 +73,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       },
       async sendReset(email) {
         if (!isSupabaseConfigured) return { error: NOT_READY };
-        const { error } = await supabase.auth.resetPasswordForEmail(email.trim());
+        const origin = webOrigin();
+        const { error } = await supabase.auth.resetPasswordForEmail(email.trim(), {
+          redirectTo: origin ? `${origin}/reset-password` : undefined,
+        });
         return error ? { error: friendly(error.message) } : {};
       },
       async setNewPassword(password) {
