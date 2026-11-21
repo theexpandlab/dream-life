@@ -33,3 +33,10 @@ export async function saveDay(userId: string, day: Day) {
   const { error } = await supabase.from('days').upsert(row, { onConflict: 'user_id,date' });
   if (error) throw error;
 }
+
+/** Daily check-ins on or after a date (for streaks and this month's pulse). */
+export async function listDaysSince(date: string): Promise<({ date: string } & Partial<Record<AreaKey, boolean>>)[]> {
+  const { data, error } = await supabase.from('days').select(['date', ...AREA_KEYS].join(',')).gte('date', date);
+  if (error) throw error;
+  return (data ?? []) as unknown as ({ date: string } & Partial<Record<AreaKey, boolean>>)[];
+}

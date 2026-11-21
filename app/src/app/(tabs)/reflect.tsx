@@ -1,6 +1,8 @@
-import { useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
+import { useEffect, useState } from 'react';
 
 import { ComingSoon } from '@/components/ComingSoon';
+import { MonthlyCheckin } from '@/components/MonthlyCheckin';
 import { Screen } from '@/components/Screen';
 import { SectionHeader } from '@/components/SectionHeader';
 import { Segments } from '@/components/ui';
@@ -12,7 +14,11 @@ const SECTIONS = [
 type Section = (typeof SECTIONS)[number]['key'];
 
 export default function Reflect() {
+  const params = useLocalSearchParams<{ section?: string }>();
   const [section, setSection] = useState<Section>('weekly');
+  useEffect(() => {
+    if (params.section === 'monthly' || params.section === 'weekly') setSection(params.section);
+  }, [params.section]);
   return (
     <Screen top={<Segments options={SECTIONS} value={section} onChange={setSection} />}>
       {section === 'weekly' ? (
@@ -27,16 +33,7 @@ export default function Reflect() {
           <ComingSoon items={['Score your week 1 to 10', 'Win of the week and what got in the way', 'Top 3 for next week', 'Weekly score trend']} />
         </>
       ) : (
-        <>
-          <SectionHeader
-            eyebrow={'04 / Monthly'}
-            before="monthly "
-            highlight="check-in"
-            after="."
-            sub="Score each area from 1 (struggling) to 10 (thriving). Be honest, nobody's grading you :)"
-          />
-          <ComingSoon items={['Score all 10 areas', 'Biggest win and where I saw God move', 'Focus for next month', 'The receipts: every month, color-coded']} />
-        </>
+        <MonthlyCheckin />
       )}
     </Screen>
   );

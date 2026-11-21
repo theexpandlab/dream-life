@@ -2,9 +2,10 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ComingSoon } from '@/components/ComingSoon';
+import { OverviewLive } from '@/components/OverviewLive';
 import { Screen } from '@/components/Screen';
 import { SectionHeader } from '@/components/SectionHeader';
-import { Card, Eyebrow, Segments, Ticker, Tile } from '@/components/ui';
+import { Segments, Ticker } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
 import { useOnboarding } from '@/lib/onboarding';
 import { colors, fonts, space } from '@/theme/tokens';
@@ -39,17 +40,7 @@ function Overview() {
         sub="Your ongoing life score plus how consistently you're showing up day to day."
       />
       <Ticker />
-      <View style={styles.pad}>
-        <View style={styles.row}>
-          <Tile label="Life score" value="7.4" note="+0.6 vs last month" noteTone="good" />
-          <Tile label="Streak" value="12" note="days in a row" />
-        </View>
-        <Card dark>
-          <Eyebrow style={{ color: colors.lime }}>Strongest area</Eyebrow>
-          <Text style={styles.heroText}>Spirituality</Text>
-        </Card>
-      </View>
-      <ComingSoon items={['Wheel of life chart', 'Life score trend line', 'Area that needs love']} />
+      <OverviewLive />
       <Pressable accessibilityRole="button" onPress={restart} style={styles.tour}>
         <Text style={styles.tourTxt}>Take the tour again {'\u2192'}</Text>
       </Pressable>

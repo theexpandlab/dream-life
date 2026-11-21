@@ -27,12 +27,14 @@ Scan the QR code with Expo Go on your phone, or press `w` for the web version.
   - `(tabs)/`: Home, Today, Reflect, Wins, Dream
 - `src/lib/supabase.ts`, `src/lib/auth.tsx`: Supabase client and login state
 - `src/lib/data/`: reading and saving each kind of data
+- `src/lib/scores.ts`: life score, change, all-time, strongest and weakest, streak, showing-up rate
 - `../supabase/migrations/`: database tables and privacy rules
 
 ## Checks
 
 ```bash
 npm run typecheck
+npm test          # scoring rules (src/lib/scores.test.ts)
 ```
 
 ## Expo notes
