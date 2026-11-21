@@ -1,9 +1,9 @@
 # Getting Dream Life onto phones
 
 ## Today: web link
-https://dream-life-app.vercel.app
+https://dream-life-app-two.vercel.app
 
-Open it on your phone, then Share > Add to Home Screen. Accounts and saving work once Supabase is connected (step 1 below).
+Open it on your phone, log in to Vercel when asked (testers can't get in until it's made public), then Share > Add to Home Screen. Accounts and saving work once Supabase is connected (step 1 below).
 
 ## Step 1: Supabase (accounts and saving), 10 minutes
 Follow `SUPABASE_SETUP.md`. Then add the two keys in two places:
