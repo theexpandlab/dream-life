@@ -24,3 +24,10 @@ The anon key is designed to live inside the app; it can only do what the row lev
 
 ## Phone builds
 Add the same two values as GitHub repository secrets `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY` (see `GET_THE_APP.md`).
+
+## Open test mode (current web link)
+The web link runs in test mode (`EXPO_PUBLIC_TEST_MODE=1` in `app/vercel.json`): no login, the tour shows once, and each tester's data saves on their own device.
+
+**Reading tester feedback:** Supabase dashboard > Table Editor > `feedback`. Newest at the bottom (sort by `created_at`).
+
+**Turning logins back on:** remove `EXPO_PUBLIC_TEST_MODE=1` from the build command in `app/vercel.json` and push. Before that, set the Site URL and Redirect URLs above so confirmation and reset emails work.
