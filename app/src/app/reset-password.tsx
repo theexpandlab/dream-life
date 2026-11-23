@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -6,10 +6,17 @@ import { AuthShell } from '@/components/AuthShell';
 import { FormMessage } from '@/components/FormMessage';
 import { PillButton, TextField } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
+import { TEST_MODE } from '@/lib/testMode';
 import { space } from '@/theme/tokens';
 
 /** Opened from the password reset email (web). */
-export default function ResetPassword() {
+export default function ResetPasswordScreen() {
+  // Open test mode has no accounts: anyone landing here goes straight into the app.
+  if (TEST_MODE) return <Redirect href="/" />;
+  return <ResetPassword />;
+}
+
+function ResetPassword() {
   const { session, setNewPassword } = useAuth();
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string>();

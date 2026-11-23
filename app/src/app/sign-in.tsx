@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { Redirect, router } from 'expo-router';
 import { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 
@@ -7,9 +7,16 @@ import { FormMessage } from '@/components/FormMessage';
 import { TextLink } from '@/components/TextLink';
 import { PillButton, TextField } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
+import { TEST_MODE } from '@/lib/testMode';
 import { space } from '@/theme/tokens';
 
-export default function SignIn() {
+export default function SignInScreen() {
+  // Open test mode has no accounts: anyone landing here goes straight into the app.
+  if (TEST_MODE) return <Redirect href="/" />;
+  return <SignIn />;
+}
+
+function SignIn() {
   const { signIn, sendReset } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
