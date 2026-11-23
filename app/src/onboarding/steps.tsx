@@ -6,6 +6,7 @@ import { BreathingCircle, Card, Chip, Eyebrow, Headline, Ticker } from '@/compon
 import { AREAS, type AreaKey } from '@/lib/areas';
 import { celebrate, tick } from '@/lib/haptics';
 import type { Profile, Reminder } from '@/lib/onboarding';
+import { TEST_MODE } from '@/lib/testMode';
 import { colors, fonts, radius, scoreColor, space, tap } from '@/theme/tokens';
 
 export type StepProps = {
@@ -32,9 +33,11 @@ export function Welcome() {
         <Ticker />
       </View>
       <Sub>This quick tour takes about a minute. You'll try each part as we go.</Sub>
+      {TEST_MODE ? null : (
       <Pressable accessibilityRole="link" onPress={() => router.replace('/sign-in')} style={s.loginLink}>
         <Text style={s.mono}>Already have an account? <Text style={{ textDecorationLine: 'underline' }}>Log in</Text></Text>
       </Pressable>
+      )}
     </View>
   );
 }

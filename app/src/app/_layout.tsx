@@ -11,6 +11,7 @@ import { useEffect, useRef } from 'react';
 import { AuthProvider, useAuth } from '@/lib/auth';
 import { loadProfile, saveOnboardingToAccount } from '@/lib/data/profile';
 import { OnboardingProvider, useOnboarding } from '@/lib/onboarding';
+import { TEST_MODE } from '@/lib/testMode';
 import { colors } from '@/theme/tokens';
 
 SplashScreen.preventAutoHideAsync();
@@ -30,7 +31,7 @@ function Root() {
   const onboarding = useOnboarding();
   const auth = useAuth();
   const ready = (fontsLoaded || !!fontError) && onboarding.loaded && auth.loaded;
-  const signedIn = !!auth.session;
+  const signedIn = TEST_MODE || !!auth.session;
   useSyncProfile();
 
   useEffect(() => {
@@ -48,7 +49,7 @@ function Root() {
         <Stack.Protected guard={signedIn}>
           <Stack.Screen name="(tabs)" />
         </Stack.Protected>
-        <Stack.Protected guard={!signedIn}>
+        <Stack.Protected guard={TEST_MODE || !signedIn}>
           <Stack.Screen name="onboarding" options={{ gestureEnabled: false }} />
           <Stack.Screen name="sign-up" options={{ gestureEnabled: false }} />
           <Stack.Screen name="sign-in" options={{ gestureEnabled: false }} />

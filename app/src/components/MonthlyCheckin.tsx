@@ -8,6 +8,7 @@ import { SectionHeader } from '@/components/SectionHeader';
 import { Card, Eyebrow, PillButton, TextField } from '@/components/ui';
 import { AREAS } from '@/lib/areas';
 import { useAuth } from '@/lib/auth';
+import { TEST_MODE } from '@/lib/testMode';
 import { listCheckins, saveCheckin, type Checkin } from '@/lib/data/checkins';
 import { monthKey, monthLabel, shiftMonth, monthShort } from '@/lib/dates';
 import { celebrate } from '@/lib/haptics';
@@ -57,12 +58,13 @@ export function MonthlyCheckin() {
   const history = useMemo(() => [...all].sort((a, b) => (a.month < b.month ? 1 : -1)), [all]);
 
   const save = async () => {
-    if (!session) return;
+    const userId = session?.user.id ?? (TEST_MODE ? 'device' : null);
+    if (!userId) return;
     if (scoredCount < 10) return setMsg({ tone: 'bad', text: `Score all 10 areas first (${10 - scoredCount} to go).` });
     setSaving(true);
     setMsg(undefined);
     try {
-      await saveCheckin(session.user.id, draft);
+      await saveCheckin(userId, draft);
       celebrate();
       setMsg({ tone: 'good', text: 'Check-in saved. Proud of you ✅' });
       await load();

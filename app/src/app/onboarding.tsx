@@ -4,6 +4,7 @@ import { Animated } from 'react-native';
 
 import { celebrate } from '@/lib/haptics';
 import { useOnboarding } from '@/lib/onboarding';
+import { TEST_MODE } from '@/lib/testMode';
 import { useReducedMotion } from '@/lib/useReducedMotion';
 import { StepShell } from '@/onboarding/StepShell';
 import * as Steps from '@/onboarding/steps';
@@ -46,7 +47,7 @@ export default function Onboarding() {
   const done = () => {
     celebrate();
     finish();
-    router.replace('/sign-up');
+    router.replace(TEST_MODE ? '/home' : '/sign-up');
   };
 
   const canNext = !step.gated || ready;

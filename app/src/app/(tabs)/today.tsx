@@ -8,6 +8,7 @@ import { SectionHeader } from '@/components/SectionHeader';
 import { Card, Chip, Eyebrow, PillButton } from '@/components/ui';
 import { AREAS, type AreaKey } from '@/lib/areas';
 import { useAuth } from '@/lib/auth';
+import { TEST_MODE } from '@/lib/testMode';
 import { getDay, saveDay } from '@/lib/data/days';
 import { localDate } from '@/lib/dates';
 import { celebrate, tick } from '@/lib/haptics';
@@ -46,11 +47,12 @@ export default function Today() {
   };
 
   const save = async () => {
-    if (!session) return;
+    const userId = session?.user.id ?? (TEST_MODE ? 'device' : null);
+    if (!userId) return;
     setSaving(true);
     setMsg(undefined);
     try {
-      await saveDay(session.user.id, { date: today, areas: [...picked], energy: null, win: '', note: '' });
+      await saveDay(userId, { date: today, areas: [...picked], energy: null, win: '', note: '' });
       celebrate();
       setMsg({ tone: 'good', text: 'Saved. Keep that streak going \u2705' });
     } catch {

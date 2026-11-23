@@ -2,12 +2,15 @@ import { useState } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 import { ComingSoon } from '@/components/ComingSoon';
+import { FeedbackCard } from '@/components/FeedbackCard';
 import { OverviewLive } from '@/components/OverviewLive';
 import { Screen } from '@/components/Screen';
 import { SectionHeader } from '@/components/SectionHeader';
 import { Segments, Ticker } from '@/components/ui';
 import { useAuth } from '@/lib/auth';
 import { useOnboarding } from '@/lib/onboarding';
+import { TEST_MODE } from '@/lib/testMode';
+import { router } from 'expo-router';
 import { colors, fonts, space } from '@/theme/tokens';
 
 const SECTIONS = [
@@ -41,19 +44,30 @@ function Overview() {
       />
       <Ticker />
       <OverviewLive />
-      <Pressable accessibilityRole="button" onPress={restart} style={styles.tour}>
-        <Text style={styles.tourTxt}>Take the tour again {'\u2192'}</Text>
-      </Pressable>
+      <ComingSoon items={['Wheel of life chart', 'Life score trend line']} />
+      {TEST_MODE ? <FeedbackCard page="home" /> : null}
       <Pressable
         accessibilityRole="button"
-        onPress={async () => {
-          await signOut();
-          clear();
+        onPress={() => {
+          restart();
+          router.push('/onboarding');
         }}
         style={styles.tour}
       >
-        <Text style={styles.tourTxt}>Log out</Text>
+        <Text style={styles.tourTxt}>Take the tour again {'\u2192'}</Text>
       </Pressable>
+      {TEST_MODE ? null : (
+        <Pressable
+          accessibilityRole="button"
+          onPress={async () => {
+            await signOut();
+            clear();
+          }}
+          style={styles.tour}
+        >
+          <Text style={styles.tourTxt}>Log out</Text>
+        </Pressable>
+      )}
     </>
   );
 }

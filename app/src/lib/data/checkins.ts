@@ -1,6 +1,8 @@
 import { AREAS } from '@/lib/areas';
 import type { MonthRow } from '@/lib/scores';
+import { readLocal, writeLocal } from '@/lib/data/local';
 import { supabase } from '@/lib/supabase';
+import { TEST_MODE } from '@/lib/testMode';
 
 export type Checkin = MonthRow & { win: string; god: string; focus: string };
 
@@ -17,6 +19,10 @@ function toCheckin(r: Record<string, unknown>): Checkin {
 
 /** Every monthly check-in, oldest first. */
 export async function listCheckins(): Promise<Checkin[]> {
+  if (TEST_MODE) {
+    const all = await readLocal<Record<string, Checkin>>('checkins', {});
+    return Object.values(all).sort((a, b) => (a.month < b.month ? -1 : 1));
+  }
   const { data, error } = await supabase.from('checkins').select('*').order('month', { ascending: true });
   if (error) throw error;
   return (data ?? []).map(toCheckin);
@@ -24,6 +30,11 @@ export async function listCheckins(): Promise<Checkin[]> {
 
 /** Saves a month. One row per user per month, so saving again edits it. */
 export async function saveCheckin(userId: string, c: Checkin) {
+  if (TEST_MODE) {
+    const all = await readLocal<Record<string, Checkin>>('checkins', {});
+    all[c.month] = c;
+    return writeLocal('checkins', all);
+  }
   const row: Record<string, unknown> = {
     user_id: userId,
     month: toDb(c.month),

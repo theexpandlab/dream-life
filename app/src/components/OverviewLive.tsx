@@ -2,7 +2,6 @@ import { router, useFocusEffect } from 'expo-router';
 import { useCallback, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 
-import { ComingSoon } from '@/components/ComingSoon';
 import { FormMessage } from '@/components/FormMessage';
 import { Card, Eyebrow, PillButton, Tile } from '@/components/ui';
 import { AREAS } from '@/lib/areas';
@@ -85,7 +84,6 @@ export function OverviewLive() {
         <PillButton label="Today's check-in" variant="secondary" onPress={() => router.push('/today')} />
       ) : null}
 
-      <ComingSoon items={['Wheel of life chart', 'Life score trend line']} />
     </View>
   );
 }
