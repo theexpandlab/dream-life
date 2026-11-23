@@ -1,0 +1,8 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "framework": null,
+  "installCommand": "npm ci",
+  "buildCommand": "node scripts/migrate.mjs && EXPO_PUBLIC_SUPABASE_URL=\"$NEXT_PUBLIC_SUPABASE_URL\" EXPO_PUBLIC_SUPABASE_ANON_KEY=\"$NEXT_PUBLIC_SUPABASE_ANON_KEY\" EXPO_PUBLIC_TEST_MODE=1 npx expo export --platform web",
+  "outputDirectory": "dist",
+  "cleanUrls": true
+}
